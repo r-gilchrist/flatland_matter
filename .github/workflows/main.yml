@@ -1,0 +1,35 @@
+---
+
+name: All checks
+
+on: [push, create]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+
+      - name: checkout
+        uses: "actions/checkout@v3"
+
+      - name: set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: install build dependencies
+        run: "pip3 install -r requirements.txt"
+
+      - name: run code quality checks
+        run: 'python3 -m flake8'
+
+      - name: run unit tests
+        run: |
+          python3 -m pytest tests
+      
+      - name: run behavioural tests
+        run: |
+          python3 -m behave tests
